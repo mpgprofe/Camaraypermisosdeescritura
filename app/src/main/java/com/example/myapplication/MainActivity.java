@@ -135,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
             imageView.setImageBitmap(bitmap);
         }else if (requestCode==VENGO_DE_LA_CAMARA_CON_FICHERO && resultCode==RESULT_OK){
             imageView.setImageBitmap(BitmapFactory.decodeFile(fichero.getAbsolutePath()));
+        }else if (requestCode==VENGO_DE_LA_CAMARA_CON_FICHERO && resultCode==RESULT_CANCELED){
+            fichero.delete();
         }
     }
 }
