@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int VENGO_DE_LA_CAMARA = 1;
     private static final int PEDI_PERMISO_DE_ESCRITURA = 1;
     private static final int VENGO_DE_LA_CAMARA_CON_FICHERO = 2;
+    private static final String PREFERENCIAS = "preferencias";
+    private static final String NOMBRE_FICHERO = "fichero_foto";
     Button hacerFoto, hacerFoto2;
     ImageView imageView;
     File fichero;
@@ -44,6 +47,13 @@ public class MainActivity extends AppCompatActivity {
 //Fin de cambiar los permisos para mis ficheros.
         hacerFoto = findViewById(R.id.buttonFoto);
         imageView = findViewById(R.id.imageView);
+       SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCIAS, MODE_PRIVATE);
+       String nombreFichero = sharedPreferences.getString(NOMBRE_FICHERO, "");
+
+        if (nombreFichero.length()!=0){
+            imageView.setImageBitmap(BitmapFactory.decodeFile(nombreFichero));
+        }
+
         hacerFoto2 =findViewById(R.id.buttonCamara2);
 
 
@@ -135,6 +145,10 @@ public class MainActivity extends AppCompatActivity {
             imageView.setImageBitmap(bitmap);
         }else if (requestCode==VENGO_DE_LA_CAMARA_CON_FICHERO && resultCode==RESULT_OK){
             imageView.setImageBitmap(BitmapFactory.decodeFile(fichero.getAbsolutePath()));
+            SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCIAS, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(NOMBRE_FICHERO,fichero.getAbsolutePath() );
+            editor.apply();
         }else if (requestCode==VENGO_DE_LA_CAMARA_CON_FICHERO && resultCode==RESULT_CANCELED){
             fichero.delete();
         }
